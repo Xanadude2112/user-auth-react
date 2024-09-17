@@ -1,0 +1,75 @@
+.navbar {
+  width: 100%;
+  background-image: linear-gradient(to bottom, #000115, #000c50);
+  color: white;
+  padding: 1% 5%; /* Adjust padding as needed */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box; /* Include padding/border in the element's total width and height */
+  font-family: "League Spartan", sans-serif;
+  font-size: 1.5rem;
+}
+
+/* Ensuring no margin on h1 */
+h1 {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-style: italic;
+  filter: drop-shadow(0 0 1rem #00aeff);
+}
+
+/* Lightning image styling */
+.lightning {
+  width: 100px;
+  filter: drop-shadow(0 0 1rem #ffffff);
+}
+
+.user-access{
+  width: 15%;
+  display: flex;
+  align-items: center;
+  gap: 10%;
+  justify-content: space-between;
+}
+
+.welcome{
+  font-size: 1rem;
+  font-weight: 600;
+  min-width: 150px;
+}
+
+.username{
+  color: #00aeff;
+  filter: drop-shadow(0 0 0.4rem #ffffff);
+}
+
+.logout{
+  min-width: 40%;
+}
+
+.btn{
+  width: 50%;
+  background-color: #00aeff;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: white;
+  border: 2.5px solid #00aeff;
+  padding: 4% 1%; 
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.btn:hover{
+  background-color: #ffffff;
+  color: #00aeff;
+  filter: drop-shadow(0 0 0.4rem #00aeff);
+}
+
+.divider{
+  font-size: 2rem;
+  font-style: none;
+
+}

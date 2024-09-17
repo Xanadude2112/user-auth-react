@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
+  color: #ffffff;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Master container to take full width */
+.master-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  box-sizing: border-box; /* Include padding/border in the element's total width and height */
+}
