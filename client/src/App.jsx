@@ -90,24 +90,27 @@ function App() {
   // EDIT USER HANDLER
   const editUser = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/users/${userArray.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // send the new username and email to the server by converting it to JSON using the values of the newUsername and newEmail state
-        body: JSON.stringify({
-          username: newUsername,
-          email: newEmail,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:8080/users/${userArray.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // send the new username and email to the server by converting it to JSON using the values of the newUsername and newEmail state
+          body: JSON.stringify({
+            username: newUsername,
+            email: newEmail,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not OK ERROR: ", response.status);
       }
 
       const data = await response.json();
-      
+
       //filter through the userArray and update the user with the matching id
       // map through the userArray instead of filtering through it so that we can update the user with the matching id and return the rest of the users as they are
       const newUserArray = userArray.map((user) => {
@@ -117,13 +120,13 @@ function App() {
         }
         return user;
       });
-      
+
       // once the user is updated, update the state of the userArray with the newUserArray instead of using a fetch request to get all users again (will eventually overload the server)
       setUserArray(newUserArray);
     } catch (err) {
       console.error(`ERROR: ${err.status}, ERROR MESSAGE: ${err.message}`);
     }
-  }
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -166,9 +169,12 @@ function App() {
         userIsLoggedIn={userIsLoggedIn}
         handleLogout={handleLogout}
       />
-      <ContentContainer 
-      userArray={userArray} 
-      userIsLoggedIn={userIsLoggedIn}
+      <ContentContainer
+        userArray={userArray}
+        userIsLoggedIn={userIsLoggedIn}
+        setNewEmail={setNewEmail}
+        setNewUsername={setNewUsername}
+        editUser={editUser}
       />
     </div>
   );

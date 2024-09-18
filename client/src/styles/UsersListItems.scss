@@ -20,3 +20,24 @@
   align-self: flex-start;
   margin: 0 5%;
 }
+
+.icon-div{
+  width: 15%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+.edit-user:hover{
+  color: #00aeff;
+  filter: drop-shadow(0 0 0.4rem #00aeff);
+  cursor: pointer;
+  transition: 0.25s;
+} 
+
+.delete-user:hover{
+  color: #ff7d7d;
+  filter: drop-shadow(0 0 0.4rem #ff0000);
+  cursor: pointer;
+  transition: 0.25s;
+}
