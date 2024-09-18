@@ -173,6 +173,8 @@ function App() {
       <ContentContainer
         userArray={userArray}
         userIsLoggedIn={userIsLoggedIn}
+        newUsername={newUsername}
+        newEmail={newEmail}
         setNewEmail={setNewEmail}
         setNewUsername={setNewUsername}
         editUser={editUser}

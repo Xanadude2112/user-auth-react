@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import lightning from "../assets/images/blue-lightning.png";
 import "../styles/EditModal.scss";
 
@@ -8,11 +9,26 @@ export const EditModal = ({
   userInfoFilterer,
   usernameBeingEdited,
   userEmailBeingEdited,
+  newUsername,
+  newEmail,
   setNewEmail,
   setNewUsername,
   editUser,
   handleEditModal,
 }) => {
+  const handleUsernameChange = (e) => {
+    setNewUsername(e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setNewEmail(e.target.value);
+  };
+
+  useEffect(() => {
+    setNewUsername(userInfoFilterer(userUsername, usernameBeingEdited) || "");
+    setNewEmail(userInfoFilterer(userEmail, userEmailBeingEdited) || "");
+  }, [userUsername, userEmail, usernameBeingEdited, userEmailBeingEdited]);
+
   return (
     <div className="modal">
       <div className="modal-overlay">
@@ -27,13 +43,15 @@ export const EditModal = ({
               <input
                 type="text"
                 name="username"
-                value={userInfoFilterer(userUsername, usernameBeingEdited)}
+                value={newUsername}
+                onChange={handleUsernameChange}
               />
               <p className="input-top email">Email</p>
               <input
                 type="email"
                 name="email"
-                value={userInfoFilterer(userEmail, userEmailBeingEdited)}
+                value={newEmail}
+                onChange={handleEmailChange}
               />
             </div>
           </form>

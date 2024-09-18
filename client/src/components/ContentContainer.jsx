@@ -8,6 +8,8 @@ import neutron from "../assets/images/neutron.png";
 export const ContentContainer = ({
   userArray,
   userIsLoggedIn,
+  newUsername,
+  newEmail,
   setNewEmail,
   setNewUsername,
   editUser,
@@ -69,6 +71,8 @@ export const ContentContainer = ({
               setUsernameBeingEdited={setUsernameBeingEdited}
               userEmailBeingEdited={userEmailBeingEdited}
               setUserEmailBeingEdited={setUserEmailBeingEdited}
+              newUsername={newUsername}
+              newEmail={newEmail}
               setNewEmail={setNewEmail}
               setNewUsername={setNewUsername}
               editUser={editUser}
