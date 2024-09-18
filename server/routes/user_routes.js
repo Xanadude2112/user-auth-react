@@ -33,9 +33,21 @@ router.get("/", async (req, res) => {
   }
 });
 
-//edit user
+// view user by id
 // http://localhost:8080/users/:id
-router.put("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await getUserById(req.params.id);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Error getting user" });
+  }
+});
+
+
+//edit user
+// http://localhost:8080/users/:id/edit
+router.put("/:id/edit", async (req, res) => {
   // destructure the request body to get the username and email
   const {username, email} = req.body;
   try {

@@ -73,6 +73,7 @@ function App() {
     setUserIsLoggedIn(null); // Reset the logged in user
   };
 
+
   //POPULATE HOME PAGE WITH USERS
   const fetchUsers = async () => {
     try {
@@ -86,12 +87,12 @@ function App() {
       console.log(`ERROR: ${err.message}, STATUS: ${err.status}`);
     }
   };
-
+  
   // EDIT USER HANDLER
   const editUser = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/users/${userArray.id}`,
+        `http://localhost:8080/users/${userArray.map((user)=> user.id)}/edit`,
         {
           method: "PUT",
           headers: {

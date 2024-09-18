@@ -13,9 +13,34 @@ export const ContentContainer = ({
   editUser,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [usernameBeingEdited, setUsernameBeingEdited] = useState(null);
+  const [userEmailBeingEdited, setUserEmailBeingEdited] = useState(null);
+  const userID = userArray.map((user) => user.id);
+  const userUsername = userArray.map((user) => user.username);
+  const userEmail = userArray.map((user) => user.email);
+
+  const userInfoFilterer = (info, desiredItem) => {
+    return info.filter((item) => item === desiredItem);
+  }
 
   const handleEditModal = () => {
     setIsEditing(!isEditing);
+  };
+
+  
+  const getUserByIdFunction = async (id) => {
+    try{
+      const response = await fetch(`http://localhost:8080/users/${id}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setUsernameBeingEdited(data.username);
+      setUserEmailBeingEdited(data.email);
+      console.log(`User with id ${id} is ${data.username}`);
+    } catch (err) {
+      console.error(`ERROR: ${err.message}`);
+    }
   };
 
   return (
@@ -36,8 +61,14 @@ export const ContentContainer = ({
         <>
           {isEditing && (
             <EditModal
-              userArray={userArray}
-              userIsLoggedIn={userIsLoggedIn}
+              userID={userID}
+              userUsername={userUsername} 
+              userEmail={userEmail}
+              userInfoFilterer={userInfoFilterer}
+              usernameBeingEdited={usernameBeingEdited}
+              setUsernameBeingEdited={setUsernameBeingEdited}
+              userEmailBeingEdited={userEmailBeingEdited}
+              setUserEmailBeingEdited={setUserEmailBeingEdited}
               setNewEmail={setNewEmail}
               setNewUsername={setNewUsername}
               editUser={editUser}
@@ -45,7 +76,11 @@ export const ContentContainer = ({
             />
           )}
           <h2 className="content-title">USERS</h2>
-          <UsersList userArray={userArray} handleEditModal={handleEditModal}/>
+          <UsersList
+            userArray={userArray}
+            handleEditModal={handleEditModal}
+            getUserByIdFunction={getUserByIdFunction}
+          />
         </>
       )}
     </div>
