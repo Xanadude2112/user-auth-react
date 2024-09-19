@@ -15,6 +15,7 @@ export const ContentContainer = ({
   editUser,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [userIdBeingEdited, setUserIdBeingEdited] = useState(null);
   const [usernameBeingEdited, setUsernameBeingEdited] = useState(null);
   const [userEmailBeingEdited, setUserEmailBeingEdited] = useState(null);
   const userID = userArray.map((user) => user.id);
@@ -23,22 +24,25 @@ export const ContentContainer = ({
 
   const userInfoFilterer = (info, desiredItem) => {
     return info.filter((item) => item === desiredItem);
-  }
+  };
 
   const handleEditModal = () => {
     setIsEditing(!isEditing);
   };
 
-  
   const getUserByIdFunction = async (id) => {
-    try{
+    try {
       const response = await fetch(`http://localhost:8080/users/${id}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
+      setUserIdBeingEdited(data.id);
       setUsernameBeingEdited(data.username);
       setUserEmailBeingEdited(data.email);
+      // Populate newUsername and newEmail with the current user's data
+      setNewUsername(data.username);
+      setNewEmail(data.email);
       console.log(`User with id ${id} is ${data.username}`);
     } catch (err) {
       console.error(`ERROR: ${err.message}`);
@@ -64,9 +68,11 @@ export const ContentContainer = ({
           {isEditing && (
             <EditModal
               userID={userID}
-              userUsername={userUsername} 
+              userUsername={userUsername}
               userEmail={userEmail}
               userInfoFilterer={userInfoFilterer}
+              userIdBeingEdited={userIdBeingEdited}
+              setUserIdBeingEdited={setUserIdBeingEdited}
               usernameBeingEdited={usernameBeingEdited}
               setUsernameBeingEdited={setUsernameBeingEdited}
               userEmailBeingEdited={userEmailBeingEdited}

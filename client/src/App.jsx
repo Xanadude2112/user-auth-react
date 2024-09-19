@@ -12,6 +12,7 @@ function App() {
   const [signUpModal, setSignUpModal] = useState(false);
   const [loginModal, setLoginModal] = useState(false);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(null); //Store the logged in user
+  const [userIdIsLoggedIn, setUserIdIsLoggedIn] = useState(null); //Store the logged in user's id
   const [userSignupInfo, setUserSignupInfo] = useState({
     username: "",
     email: "",
@@ -40,6 +41,7 @@ function App() {
       const data = await response.json();
       setUserArray((prevUserArray) => [...prevUserArray, data]); // Ensure userArray is updated correctly
       setUserIsLoggedIn(data.username); // Assuming you want to store the username
+      setUserIdIsLoggedIn(data.id); // Assuming you want to store the user id
     } catch (err) {
       console.error(`ERROR: ${err.message}`);
     }
@@ -61,6 +63,7 @@ function App() {
       }
 
       const data = await response.json();
+      setUserIdIsLoggedIn(data.id); // Assuming you want to store the user id
       setUserIsLoggedIn(data.username); // Assuming you want to store the username
       console.log(`USER: ${data.username} IS LOGGED IN`); // Log the username
     } catch (err) {
@@ -70,6 +73,7 @@ function App() {
 
   //HANDLE LOGOUT
   const handleLogout = async () => {
+    setUserIdIsLoggedIn(null); // Reset the logged in user's id
     setUserIsLoggedIn(null); // Reset the logged in user
   };
 
@@ -89,10 +93,10 @@ function App() {
   };
   
   // EDIT USER HANDLER
-  const editUser = async () => {
+  const editUser = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/users/${userArray.map((user)=> user.id)}/edit`,
+        `http://localhost:8080/users/${id}/edit`,
         {
           method: "PUT",
           headers: {
@@ -111,10 +115,14 @@ function App() {
       }
 
       const data = await response.json();
-
       //filter through the userArray and update the user with the matching id
       // map through the userArray instead of filtering through it so that we can update the user with the matching id and return the rest of the users as they are
       const newUserArray = userArray.map((user) => {
+        // this is to make sure the username of the logged in user is 
+        // updated and doesnt change to a different user when you edit another user
+        if  (userIdIsLoggedIn === data.id) {
+          setUserIsLoggedIn(data.username);
+        }
         // if the user id matches the id of the user we just updated, return the updated user
         if (user.id === data.id) {
           return data;
@@ -126,6 +134,23 @@ function App() {
       setUserArray(newUserArray);
     } catch (err) {
       console.error(`ERROR: ${err.status}, ERROR MESSAGE: ${err.message}`);
+    }
+  };
+
+  // DELETE USER HANDLER
+  const deleteUser = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/users/${id}/delete`)
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log(`DELETED USER: ${data}`);
+      // this filters out (removes) the user with the matching id from the userArray
+      const newUserArray = userArray.filter((user) => user.id !== id);
+      setUserArray(newUserArray);
+    } catch (err) {
+      console.error(`ERROR: ${err.message}`);
     }
   };
 

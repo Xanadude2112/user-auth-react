@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import lightning from "../assets/images/blue-lightning.png";
 import "../styles/EditModal.scss";
 
@@ -6,15 +5,16 @@ export const EditModal = ({
   userID,
   userUsername,
   userEmail,
-  userInfoFilterer,
-  usernameBeingEdited,
-  userEmailBeingEdited,
   newUsername,
   newEmail,
   setNewEmail,
   setNewUsername,
   editUser,
   handleEditModal,
+  userIdBeingEdited,
+  usernameBeingEdited,
+  userEmailBeingEdited,
+  userInfoFilterer
 }) => {
   const handleUsernameChange = (e) => {
     setNewUsername(e.target.value);
@@ -24,11 +24,6 @@ export const EditModal = ({
     setNewEmail(e.target.value);
   };
 
-  useEffect(() => {
-    setNewUsername(userInfoFilterer(userUsername, usernameBeingEdited) || "");
-    setNewEmail(userInfoFilterer(userEmail, userEmailBeingEdited) || "");
-  }, [userUsername, userEmail, usernameBeingEdited, userEmailBeingEdited]);
-
   return (
     <div className="modal">
       <div className="modal-overlay">
@@ -37,7 +32,7 @@ export const EditModal = ({
             EDIT {userInfoFilterer(userUsername, usernameBeingEdited)}
             <img className="modal-lightning" src={lightning} alt="" />
           </h2>
-          <form onSubmit={editUser}>
+          <form onSubmit={editUser(userInfoFilterer(userID, userIdBeingEdited))}>
             <div className="modal-inputs">
               <p className="input-top username">Username</p>
               <input
@@ -59,7 +54,10 @@ export const EditModal = ({
             <button className="btn cancel" onClick={handleEditModal}>
               Cancel
             </button>
-            <button className="btn save" onClick={editUser}>
+            <button className="btn save" onClick={()=>{
+              editUser(userInfoFilterer(userID, userIdBeingEdited))
+              handleEditModal()
+            }}>
               Save
             </button>
           </div>

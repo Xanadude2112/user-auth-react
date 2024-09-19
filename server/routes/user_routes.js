@@ -79,8 +79,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// logout
-// http://localhost:8080/users/logout
+// delete user
+// http://localhost:8080/users/:id/delete
+router.delete("/:id/delete", async (req, res) => {
+  try{
+    const deletedUser = await deleteUser(req.params.id);
+    res.status(200).json(deletedUser);
+  } catch (err) {
+    res.status(500).json({ error: "Error deleting user" });
+  }
+});
 
 
 module.exports = router;
