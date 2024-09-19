@@ -6,6 +6,7 @@ export const UsersListItem = ({
   email,
   handleEditModal,
   getUserByIdFunction,
+  deleteUser
 }) => {
   return (
     <div className="user-list-item">
@@ -19,7 +20,7 @@ export const UsersListItem = ({
               getUserByIdFunction(id);
             }}
           ></i>
-          <i className="fa-solid fa-xmark delete-user"></i>
+          <i className="fa-solid fa-xmark delete-user" onClick={()=>deleteUser(id)}></i>
         </div>
       </div>
       <div className="item-content">

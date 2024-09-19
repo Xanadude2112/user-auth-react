@@ -13,6 +13,7 @@ export const ContentContainer = ({
   setNewEmail,
   setNewUsername,
   editUser,
+  deleteUser
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [userIdBeingEdited, setUserIdBeingEdited] = useState(null);
@@ -90,6 +91,7 @@ export const ContentContainer = ({
             userArray={userArray}
             handleEditModal={handleEditModal}
             getUserByIdFunction={getUserByIdFunction}
+            deleteUser={deleteUser}
           />
         </>
       )}

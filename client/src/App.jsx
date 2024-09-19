@@ -140,20 +140,24 @@ function App() {
   // DELETE USER HANDLER
   const deleteUser = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/users/${id}/delete`)
+      const response = await fetch(`http://localhost:8080/users/${id}/delete`,
+      {
+        method: "DELETE",
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
       console.log(`DELETED USER: ${data}`);
       // this filters out (removes) the user with the matching id from the userArray
-      const newUserArray = userArray.filter((user) => user.id !== id);
+      const newUserArray = userArray.filter((user) => user.id !== data.id);
       setUserArray(newUserArray);
     } catch (err) {
       console.error(`ERROR: ${err.message}`);
     }
   };
 
+  // this is meant to act as a refresh button to get all users again after changes have been made
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -203,6 +207,7 @@ function App() {
         setNewEmail={setNewEmail}
         setNewUsername={setNewUsername}
         editUser={editUser}
+        deleteUser={deleteUser}
       />
     </div>
   );

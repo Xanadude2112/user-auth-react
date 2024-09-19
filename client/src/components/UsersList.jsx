@@ -1,7 +1,12 @@
 import { UsersListItem } from "./UsersListsItem";
 import "../styles/UsersList.scss";
 
-export const UsersList = ({ userArray, handleEditModal, getUserByIdFunction }) => {
+export const UsersList = ({
+  userArray,
+  handleEditModal,
+  getUserByIdFunction,
+  deleteUser,
+}) => {
   return (
     <div className="user-list">
       {userArray.map((user) => (
@@ -12,6 +17,7 @@ export const UsersList = ({ userArray, handleEditModal, getUserByIdFunction }) =
           email={user.email}
           handleEditModal={handleEditModal}
           getUserByIdFunction={getUserByIdFunction}
+          deleteUser={deleteUser}
         />
       ))}
     </div>
