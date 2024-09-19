@@ -10,13 +10,12 @@ export const SignUpModal = ({
   setUserSignupInfo,
   setUserIsLoggedIn,
 }) => {
-
   const handleRegisterChange = (e) => {
     setUserSignupInfo({
       ...userSignupInfo,
       [e.target.name]: e.target.value,
     });
-    console.log(userSignupInfo)
+    console.log(userSignupInfo);
     // OR you can manually construct the object like this
     // const newUserInfo = {
     //   username: userSignupInfo.username,   // Copy current username
@@ -30,12 +29,21 @@ export const SignUpModal = ({
   const handleSignUpSubmit = async (e) => {
     e.preventDefault(); // Ensure form submission is prevented correctly
     try {
-      await registerUser(userSignupInfo); // Register the user
-      handleSignUpModal(); // Close the modal
-      setUserIsLoggedIn(userSignupInfo.username); // Set the logged in user
-      console.log(
-        `Successfully registered with ${userSignupInfo.username} to the database!`
-      ); // Log the user info
+      if (
+        !userSignupInfo.username ||
+        !userSignupInfo.email ||
+        !userSignupInfo.password
+      ) {
+        alert("Please fill in all fields");
+        return;
+      } else {
+        registerUser(userSignupInfo); // Register the user
+        handleSignUpModal(); // Close the modal
+        setUserIsLoggedIn(userSignupInfo.username); // Set the logged in user
+        console.log(
+          `Successfully registered with ${userSignupInfo.username} to the database!`
+        ); // Log the user info
+      }
     } catch (err) {
       console.error(`ERROR: ${err.message}`);
     }
@@ -79,7 +87,9 @@ export const SignUpModal = ({
             </div>
           </form>
           <div className="modal-interact">
-            <button className="sign-up-button" onClick={handleSignUpSubmit}>Sign Up</button>
+            <button className="sign-up-button" onClick={handleSignUpSubmit}>
+              Sign Up
+            </button>
             <p>
               Already have an account?
               <span

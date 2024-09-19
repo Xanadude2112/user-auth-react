@@ -9,7 +9,6 @@ export const LoginModal = ({
   setUserLoginInfo,
   setUserIsLoggedIn,
 }) => {
-
   // This function is called when the user types in the input fields
   const handleLoginChange = (e) => {
     setUserLoginInfo({
@@ -24,8 +23,13 @@ export const LoginModal = ({
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetchLoggedInUser(userLoginInfo); // No need to manually set the username here
-      handleLoginModal();
+      if (!userLoginInfo.email || !userLoginInfo.password) {
+        alert("Please fill in all fields");
+        return;
+      } else {
+        await fetchLoggedInUser(userLoginInfo); // No need to manually set the username here
+        handleLoginModal();
+      }
     } catch (err) {
       console.error(`ERROR: ${err.message}`);
     }
@@ -58,7 +62,9 @@ export const LoginModal = ({
             </div>
           </form>
           <div className="modal-interact">
-            <button className="login-button" onClick={handleLoginSubmit}>Login</button>
+            <button className="login-button" onClick={handleLoginSubmit}>
+              Login
+            </button>
             <p>
               Don't have an account?{" "}
               <span

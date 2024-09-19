@@ -16,11 +16,15 @@ router.post("/register", async (req, res) => {
   // post is used to send data to the server to create a new resource-> it is giving the server information (data)
   const { username, email, password } = req.body;
   try {
-     // Check if the email already exists
-     const existingUser = await getUserByEmail(email);
-     if (existingUser) {
-       return res.status(400).json({ error: "This email already exists" });
-     }
+    // Check if the email already exists
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ error: "This email already exists" });
+    }
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: "Please fill in all fields" });
+    }
 
     //salt is used for hashing the password by generating a random string
     const salt = await bcrypt.genSalt(10);
@@ -31,9 +35,10 @@ router.post("/register", async (req, res) => {
       username,
       email,
       password: hashedPassword,
-    }
+    };
     //save the new user to the database
     const savedUser = await createUser(newUser);
+    console.log(`USER CREATED WITH INFO:  ${req.body}`);
     res.status(201).json(savedUser);
   } catch (err) {
     res.status(500).json({ error: "Error creating user" });
@@ -47,17 +52,30 @@ router.post("/login", async (req, res) => {
     // Get the user by email
     const user = await getUserByEmail(req.body.email);
 
-    if(!user) {
+    if (!user) {
+      //add return to stop the function immediately if the user does not exist
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Check if the user exists and password matches
-    if (user && user.password === req.body.password) {
-      console.log("LOGGED IN USER INFO :", user);
-      res.status(200).json(user); // Return the full user object
-    } else {
-      res.status(401).json({ error: "Invalid email or password" });
+    if (!email || !password) {
+      return res.status(400).json({ error: "Please fill in all fields" });
     }
+
+
+    // brcypt.compare compares the password the user entered (req.body.password) with the hashed password in the database (user.password)
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      //add return to stop the function immediately if the password is invalid
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+    // Check if the user exists and password matches
+
+    console.log("LOGGED IN USER INFO :", user);
+    res.status(200).json(user); // Return the full user object
   } catch (err) {
     res.status(500).json({ error: "Error logging in" });
   }
@@ -86,12 +104,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
 //edit user
 // http://localhost:8080/users/:id/edit
 router.put("/:id/edit", async (req, res) => {
   // destructure the request body to get the username and email
-  const {username, email} = req.body;
+  const { username, email } = req.body;
   try {
     // req.params.id will be used to get the user id from the URL and is needed anytime we have :id in the URL
     const editedUser = await updateUser(req.params.id, username, email);
@@ -100,19 +117,17 @@ router.put("/:id/edit", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Error updating user" });
   }
-})
-
+});
 
 // delete user
 // http://localhost:8080/users/:id/delete
 router.delete("/:id/delete", async (req, res) => {
-  try{
+  try {
     const deletedUser = await deleteUser(req.params.id);
     res.status(200).json(deletedUser);
   } catch (err) {
     res.status(500).json({ error: "Error deleting user" });
   }
 });
-
 
 module.exports = router;

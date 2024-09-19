@@ -14,14 +14,13 @@ export const Navbar = ({
         <img className="lightning" src={image} />
         AUTH
       </h1>
-      <div className="user-access">
         {userIsLoggedIn ? (
-          <>
+          <div className="user-access logged-in">
             <p className="welcome">Welcome, <span className="username">{userIsLoggedIn}</span>!</p>
             <button className="btn logout" onClick={handleLogout}>Logout</button>
-          </>
+          </div>
         ) : (
-          <>
+          <div className="user-access">
             <button className="btn sign-up" onClick={handleSignUpModal}>
               Sign Up
             </button>
@@ -29,9 +28,8 @@ export const Navbar = ({
             <button className="btn login" onClick={handleLoginModal}>
               Login
             </button>
-          </>
+          </div>
         )}
-      </div>
     </div>
   );
 };
