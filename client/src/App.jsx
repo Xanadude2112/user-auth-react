@@ -140,18 +140,25 @@ function App() {
   // DELETE USER HANDLER
   const deleteUser = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/users/${id}/delete`,
-      {
+      const response = await fetch(`http://localhost:8080/users/${id}/delete`, {
         method: "DELETE",
       });
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
-      console.log(`DELETED USER: ${data}`);
-      // this filters out (removes) the user with the matching id from the userArray
-      const newUserArray = userArray.filter((user) => user.id !== data.id);
+  
+      // No need to parse the response JSON if it only returns a success message
+      // Filter out the user directly using the `id` passed into the function
+      const newUserArray = userArray.filter((user) => user.id !== id);
       setUserArray(newUserArray);
+      
+      // if the user being deleted is the logged in user, log them out (setUserIsLoggedIn to null)
+      if (userIdIsLoggedIn === id) {
+        setUserIsLoggedIn(null);
+      }
+  
+      console.log(`Deleted user with id: ${id}`);
     } catch (err) {
       console.error(`ERROR: ${err.message}`);
     }

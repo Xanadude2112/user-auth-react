@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const router = express.Router();
 const {
   createUser,
@@ -9,15 +10,56 @@ const {
   deleteUser,
 } = require("../db/queries/users");
 
-// create a new user
+// create a new user (register)
 // http://localhost:8080/users/register
 router.post("/register", async (req, res) => {
   // post is used to send data to the server to create a new resource-> it is giving the server information (data)
+  const { username, email, password } = req.body;
   try {
-    const newUser = await createUser(req.body);
-    res.json(newUser);
+     // Check if the email already exists
+     const existingUser = await getUserByEmail(email);
+     if (existingUser) {
+       return res.status(400).json({ error: "This email already exists" });
+     }
+
+    //salt is used for hashing the password by generating a random string
+    const salt = await bcrypt.genSalt(10);
+    //here we use bcrypt to hash the password
+    const hashedPassword = await bcrypt.hash(password, salt);
+    //create the new user object
+    const newUser = {
+      username,
+      email,
+      password: hashedPassword,
+    }
+    //save the new user to the database
+    const savedUser = await createUser(newUser);
+    res.status(201).json(savedUser);
   } catch (err) {
     res.status(500).json({ error: "Error creating user" });
+  }
+});
+
+// login
+// http://localhost:8080/users/login
+router.post("/login", async (req, res) => {
+  try {
+    // Get the user by email
+    const user = await getUserByEmail(req.body.email);
+
+    if(!user) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    // Check if the user exists and password matches
+    if (user && user.password === req.body.password) {
+      console.log("LOGGED IN USER INFO :", user);
+      res.status(200).json(user); // Return the full user object
+    } else {
+      res.status(401).json({ error: "Invalid email or password" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Error logging in" });
   }
 });
 
@@ -60,24 +102,6 @@ router.put("/:id/edit", async (req, res) => {
   }
 })
 
-// login
-// http://localhost:8080/users/login
-router.post("/login", async (req, res) => {
-  try {
-    // Get the user by email
-    const user = await getUserByEmail(req.body.email);
-
-    // Check if the user exists and password matches
-    if (user && user.password === req.body.password) {
-      console.log("LOGGED IN USER INFO :", user);
-      res.status(200).json(user); // Return the full user object
-    } else {
-      res.status(401).json({ error: "Invalid email or password" });
-    }
-  } catch (err) {
-    res.status(500).json({ error: "Error logging in" });
-  }
-});
 
 // delete user
 // http://localhost:8080/users/:id/delete
